@@ -17,23 +17,21 @@ echo "kubeadm init success"
 # save configs
 config_path="/vagrant/config"
 
-if [ -d $config_path ]; then
-   sudo rm -f $config_path/*
-else
-   sudo mkdir -p $config_path
-fi
-
-
 # worker join
-cp -i /etc/kubernetes/admin.conf $config_path/config
+cp -f /etc/kubernetes/admin.conf $config_path/config
 touch $config_path/work_join.sh
 chmod +x $config_path/work_join.sh       
 echo "create work_join.sh success"
 
-# kubeadm token create --print-join-command > $config_path/work_join.sh
+kubeadm token create --print-join-command > $config_path/work_join.sh
 
-# # master join
+# master join
 cp $config_path/work_join.sh $config_path/master_join.sh
 echo " --control-plane --certificate-key " >> $config_path/master_join.sh
 kubeadm init phase upload-certs  --upload-certs  >> $config_path/master_join.sh
 echo "create master_join.sh success"
+
+# kubectl config
+mkdir -p /home/vagrant/.kube
+cp -f /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+chown 1000:1000 /home/vagrant/.kube/config
