@@ -52,10 +52,3 @@ EOF
 systemctl daemon-reload
 systemctl enable --now kubelet
 echo "install k8s components success"
-
-# HA
-yum install keepalived haproxy -y
-cp /vagrant/config/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
-systemctl daemon-reload
-systemctl enable --now haproxy
-echo "install haproxy success"
